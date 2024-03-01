@@ -1,9 +1,13 @@
 # QuickSwitch
+
 **Use opened file manager folders in File dialogs.**
 
 QuickSwitch is an alternative to [Listary's QuickSwitch](https://www.youtube.com/watch?v=9T9-OtRVeUw) as that is abandoned.
-<br />
-<br />
+
+Modified:
+
+1. Get path of active or all explorer tab
+
 ### What does QuickSwitch do?
 
 When in a file dialog, like Save As .. or Open ... , it can switch that dialog to any folder that is opened in a file manager.
