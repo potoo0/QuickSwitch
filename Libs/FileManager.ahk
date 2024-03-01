@@ -1,6 +1,14 @@
 GetAllFolder() {
     allFolders := []
-    for winId in WinGetlist() {
+
+    ; skip hidden windows
+    DetectHiddenWindowsStateOld := A_DetectHiddenWindows
+    DetectHiddenWindows false
+    windows := WinGetlist()
+    DetectHiddenWindows DetectHiddenWindowsStateOld
+
+    ; parse foler
+    for winId in windows {
         winCls := WinGetClass("ahk_id " winId)
         fileManager := ""
         switch winCls {

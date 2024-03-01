@@ -4,7 +4,10 @@ FileDialogDispatcher(winId) {
     ; First is for notepad/vscode...; second for all other filedialogs
     ; That is our rough detection of a File dialog. Returns 1 or 0 (TRUE/FALSE)
     flag := 0 ; bits: SysListView321 ToolbarWindow321 DirectUIHWND1 Edit1
-    for control in WinGetControls("ahk_id " . winId) {
+    if (!WinExist("ahk_id " winId)) {
+        return false
+    }
+    for control in WinGetControls("ahk_id " winId) {
         switch control {
             case "Edit1":
                 flag |= 1
@@ -46,6 +49,9 @@ class GeneralFileDialog extends AbstractFileDialog {
      * @param {Integer} dstFolder
      */
     static UpdateCurrentFolder(winId, dstFolder) {
+        if (!WinExist("ahk_id " winId)) {
+            return
+        }
         WinActivate("ahk_id " winId)
         Sleep(60)
 
@@ -104,6 +110,9 @@ class SysListWiewFileDialog extends AbstractFileDialog {
      * @param {Integer} dstFolder
      */
     static UpdateCurrentFolder(winId, dstFolder) {
+        if (!WinExist("ahk_id " winId)) {
+            return
+        }
         WinActivate("ahk_id " winId)
 
         ; Read the current text in the "File Name:" input box

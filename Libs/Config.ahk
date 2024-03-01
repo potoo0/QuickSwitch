@@ -3,9 +3,17 @@ CFG := Config()
 
 
 class Context {
-    static WinID := ""
+    static WinID := 0
     static FingerPrint := ""
     static FileDialog := ""
+    static DebugViewHwnd := 0
+
+    static Update(_winID) {
+        Context.WinID := _winID
+        Context.FingerPrint := ""
+        Context.FileDialog := ""
+        Context.DebugViewHwnd := 0
+    }
 
     static InitFingerPrint(winID) {
         ; process name of the windows file dialog, eg: notepad.exe
@@ -64,5 +72,9 @@ class Config extends Object {
             return
         }
         IniDelete(this.ConfigFilePath, section, key)
+    }
+
+    ClearCache() {
+        this._cache.Clear()
     }
 }

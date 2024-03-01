@@ -4,9 +4,10 @@
 
 QuickSwitch is an alternative to [Listary's QuickSwitch](https://www.youtube.com/watch?v=9T9-OtRVeUw) as that is abandoned.
 
-Modified:
+Modified based on [gepruts/QuickSwitch](https://github.com/gepruts/QuickSwitch):
 
 1. Get path of active or all explorer tab
+2. Fix menu close by escape/click-outside
 
 ### What does QuickSwitch do?
 

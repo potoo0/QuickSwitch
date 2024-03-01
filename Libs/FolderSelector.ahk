@@ -3,6 +3,10 @@
 
 
 ShowFolderSelector(*) {
+    ; double check file dialog
+    if (!WinExist("ahk_id" Context.WinID) || !(WinActive("ahk_id" Context.WinID) || WinActive("ahk_id " A_ScriptHwnd))) {
+        return
+    }
     folders := GetAllFolder()
     if (!folders or !folders.Length) {
         return
@@ -10,31 +14,35 @@ ShowFolderSelector(*) {
 
     ; create menu
     contextMenu := createMenu(folders)
-    contextMenu.Show("100", "100") ; halt main thread
+
+    ; double check file dialog
+    if (WinExist("ahk_id" Context.WinID) && (WinActive("ahk_id" Context.WinID) || WinActive("ahk_id " A_ScriptHwnd))) {
+        ; manually calc pos, as the file dialog not active
+        WinGetPos(&posX, &posY,,, "ahk_id" Context.WinID)
+        contextMenu.Show(posX + 200, posY + 200) ; halt main thread
+    }
 
     destroyMenu()
 
     createMenu(folders) {
         ;	--------------- [ Title Bar ] ---------------
         contextMenu := Menu()
-        contextMenu.Add("QuickSwitch Menu", (*) => "")
-        contextMenu.disable("QuickSwitch Menu")
 
-        ;	--------------- [ folders ] ---------------
+        ; --------------- [ folders ] ---------------
         for idx, folder in folders {
-            ; name := "(!" idx ") " folder
-            name := folder
+            name := idx <= 10 ? ("&" idx " " folder) : folder
             contextMenu.Add(name, onFolderChoice)
-            contextMenu.SetIcon(name, "shell32.dll", "5")
+            contextMenu.SetIcon(name, "shell32.dll", 5)
         }
 
         ; --------------- [ Settings ] ---------------
         contextMenu.Add()
-        contextMenu.Add("Settings for this dialog", (*) => "")
-        contextMenu.disable("Settings for this dialog")
-        contextMenu.Add("Never here", onMenuDisable, "Radio")
-        contextMenu.Add("Not now", onResetConfig, "Radio")
-        contextMenu.Add("Debug this dialog", DebugFileDialog)
+        contextMenu.Add("&Never here", onMenuDisable, "Radio")
+        contextMenu.SetIcon("&Never here", "shell32.dll", 110)
+        contextMenu.Add("&Not now", onResetConfig, "Radio")
+        contextMenu.SetIcon("&Not now", "shell32.dll", 132)
+        contextMenu.Add("&Debug this dialog", DebugFileDialog)
+        contextMenu.SetIcon("&Debug this dialog", "shell32.dll", 57)
 
         ; --------------- [ Style ] ---------------
         contextMenu.SetColor("C0C59C")
@@ -47,9 +55,12 @@ ShowFolderSelector(*) {
         contextMenu.Delete()
     }
 
-    onFolderChoice(ItemName, *) {
-        if (Context.FileDialog and DirExist(ItemName)) {
-            Context.FileDialog.UpdateCurrentFolder(Context.WinID, ItemName)
+    onFolderChoice(itemName, *) {
+        if (RegExMatch(itemName, "^&\d\W", &OutputVar)) {
+            itemName := SubStr(itemName, StrLen(OutputVar[0]) + 1)
+        }
+        if (Context.FileDialog and DirExist(itemName)) {
+            Context.FileDialog.UpdateCurrentFolder(Context.WinID, itemName)
         }
     }
 
@@ -78,10 +89,12 @@ DebugFileDialog(*) {
     cancelBtn := debugGui.Add("Button", "x+10 w100 h30", "Cancel")
     cancelBtn.OnEvent("Click", cancel)
 
+    Context.DebugViewHwnd := debugGui.Hwnd
+    debugGui.OnEvent("Escape", cancel)
     debugGui.Show()
 
     appendFileDialogInfo() {
-        winId := WinExist("A")
+        winId := WinExist("ahk_id " Context.WinID)
         if (!winId) {
             return
         }
