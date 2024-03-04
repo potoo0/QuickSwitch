@@ -3,10 +3,13 @@
 
 ThisVersion := "0.5.1"
 
-;@Ahk2Exe-SetVersion 0.5.1
+;@Ahk2Exe-SetVersion %A_PriorLine~U)^(.+")(.*)".*$~$2%
 ;@Ahk2Exe-SetName QuickSwitch
 ;@Ahk2Exe-SetDescription QuickSwitch ; the script's name in Task Manager under "Processes".
 ;@Ahk2Exe-SetCopyright NotNull
+/*@Ahk2Exe-Keep
+KeyHistory 0 ; disable key history
+*/
 
 #Include Libs\Config.ahk
 #Include Libs\FileDialog.ahk
