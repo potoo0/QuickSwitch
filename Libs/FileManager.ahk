@@ -8,6 +8,7 @@ GetAllFolder() {
     DetectHiddenWindows DetectHiddenWindowsStateOld
 
     ; parse foler
+    folderMap := Map() ; ensure folder unique
     for winId in windows {
         winCls := WinGetClass("ahk_id " winId)
         fileManager := ""
@@ -20,7 +21,12 @@ GetAllFolder() {
 
         folders := fileManager.GetCurrentFolder(winId, true)
         if (folders and folders.Length) {
-            allFolders.Push(folders*)
+            for folder in folders {
+                if (!folderMap.Has(folder)) {
+                    allFolders.Push(folder)
+                    folderMap.Set(folder, true)
+                }
+            }
         }
     }
     return allFolders

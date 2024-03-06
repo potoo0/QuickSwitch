@@ -8,6 +8,7 @@ Modified based on [gepruts/QuickSwitch](https://github.com/gepruts/QuickSwitch):
 
 1. Get path of active or all explorer tab
 2. Fix menu close by escape/click-outside
+3. Auto startup(TrayMenu)
 
 ### What does QuickSwitch do?
 

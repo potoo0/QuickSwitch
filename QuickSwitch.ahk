@@ -14,6 +14,7 @@ KeyHistory 0 ; disable key history
 #Include Libs\Config.ahk
 #Include Libs\FileDialog.ahk
 #Include Libs\FolderSelector.ahk
+#Include Libs\Settings.ahk
 
 ;_____________________________________________________________________________
 ;
